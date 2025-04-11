@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NutriChef Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <style>
+      /* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* CSS Variables for Theming */
+:root {
+  --primary-color: #6A5ACD;
+  --secondary-color: #FFA07A;
+  --accent-color: #20B2AA;
+  --background-color: #f5f5f5;
+  --sidebar-bg: #ffffff;
+  --header-bg: #ffffff;
+  --card-bg: #ffffff;
+  --text-color: #333;
+  --border-color: #ddd;
+  --modal-bg: rgba(0, 0, 0, 0.5);
+  --transition-speed: 0.3s;
+}
+
+/* Dark Mode Overrides */
+body.dark-mode {
+  --primary-color: #8470FF;
+  --secondary-color: #FF8C69;
+  --accent-color: #3CB371;
+  --background-color: #1e1e1e;
+  --sidebar-bg: #2a2a2a;
+  --header-bg: #2a2a2a;
+  --card-bg: #333;
+  --text-color: #fff;
+  --border-color: #444;
+}
+
+.recipe-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: box-shadow var(--transition-speed);
+}
+.recipe-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Global Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* App Container */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 250px;
+  background-color: var(--sidebar-bg);
+  padding: 20px;
+  border-right: 1px solid var(--border-color);
+}
+
+.sidebar .logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.sidebar .logo i {
+  font-size: 24px;
+  color: var(--primary-color);
+  margin-right: 10px;
+}
+
+.sidebar .logo h1 {
+  font-size: 24px;
+}
+
+.sidebar nav ul {
+  list-style: none;
+}
+
+.sidebar nav ul li {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  transition: background-color var(--transition-speed);
+}
+
+.sidebar nav ul li i {
+  margin-right: 12px;
+  font-size: 18px;
+  color: var(--primary-color);
+}
+
+.sidebar nav ul li:hover,
+.sidebar nav ul li.active {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+/* Main Content Styling */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App Header */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--header-bg);
+  padding: 15px 30px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+.search-bar button {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-left: none;
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.search-bar button:hover {
+  background-color: var(--accent-color);
+}
+
+.header-actions .btn-theme {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--primary-color);
+  transition: color var(--transition-speed);
+}
+
+.header-actions .btn-theme:hover {
+  color: var(--accent-color);
+}
+
+/* Tab Content Sections */
+.tab-content {
+  padding: 20px 30px;
+  display: none;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Dashboard Grid & Cards */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stats-card {
+  flex: 1;
+  min-width: 200px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  transition: box-shadow var(--transition-speed);
+}
+
+.stats-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card i {
+  font-size: 28px;
+  margin-right: 15px;
+  color: var(--primary-color);
+}
+
+.stats-card h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.stats-card p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Chart Container */
+.charts-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.chart-container {
+  flex: 1;
+  min-width: 300px;
+  background-color: var(--card-bg);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+/* Featured Recipes */
+.featured-recipes {
+  margin-top: 30px;
+}
+
+.featured-recipes h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.featured-recipes h2 i {
+  margin-right: 10px;
+  color: var(--secondary-color);
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Recipe Explorer Section */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.recipe-filters select {
+  padding: 8px 12px;
+  margin-left: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+/* Nutrition Analyzer Section */
+.nutrition-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nutrition-search {
+  display: flex;
+  flex-direction: column;
+}
+
+.nutrition-search .search-box {
+  display: flex;
+  margin-top: 10px;
+}
+
+.nutrition-search input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px 0 0 4px;
+}
+
+.nutrition-search button {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-left: none;
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.nutrition-search button:hover {
+  background-color: var(--accent-color);
+}
+
+#nutrition-results {
+  padding: 20px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+/* Health Performance Section */
+.health-performance {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.health-performance h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.health-charts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.health-charts .chart-container {
+  flex: 1;
+  min-width: 300px;
+  background-color: var(--card-bg);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.health-suggestions {
+  margin-top: 20px;
+  background-color: var(--card-bg);
+  padding: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+/* Button styling for Add Food Record */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-color);
+}
+
+/* Food Modal Adjustments */
+#food-modal .modal-content {
+  max-width: 500px;
+}
+
+#food-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#food-modal form h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+#food-modal label {
+  font-weight: 500;
+}
+
+#food-modal input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+/* Modal Styling (common for recipe and food modals) */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-speed);
+}
+
+.modal:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: 8px;
+  position: relative;
+  max-width: 600px;
+  width: 90%;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-speed);
+}
+
+/* Responsive Design Adjustments */
+@media screen and (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .main-content {
+    flex: none;
+  }
+  
+  .app-header {
+    padding: 10px 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .search-bar {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .health-charts {
+    flex-direction: column;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fas fa-utensils"></i>
+          <h1>NutriChef</h1>
+        </div>
+        <nav>
+          <ul>
+            <li class="nav-item active" data-tab="dashboard">
+              <i class="fas fa-home"></i>
+              <span>Dashboard</span>
+            </li>
+            <li class="nav-item" data-tab="recipes">
+              <i class="fas fa-book-open"></i>
+              <span>Recipes</span>
+            </li>
+            <li class="nav-item" data-tab="nutrition">
+              <i class="fas fa-chart-pie"></i>
+              <span>Nutrition</span>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="app-header">
+          <div class="search-bar">
+            <input type="text" id="global-search" placeholder="Search recipes..." />
+            <button id="search-btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div class="header-actions">
+            <button class="btn-theme">
+              <i class="fas fa-moon"></i>
+            </button>
+          </div>
+        </header>
+        
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="tab-content active">
+          <div class="dashboard-grid">
+            <!-- Stats Row -->
+            <div class="stats-row">
+              <div class="stats-card">
+                <i class="fas fa-utensils"></i>
+                <div>
+                  <h3>Total Recipes</h3>
+                  <p id="total-recipes">0</p>
+                </div>
+              </div>
+              <div class="stats-card">
+                <i class="fas fa-fire"></i>
+                <div>
+                  <h3>Avg. Calories</h3>
+                  <p id="avg-calories">0 kcal</p>
+                </div>
+              </div>
+              <div class="stats-card">
+                <i class="fas fa-clock"></i>
+                <div>
+                  <h3>Avg. Prep Time</h3>
+                  <p id="avg-time">0 mins</p>
+                </div>
+              </div>
+            </div>
+            <!-- Charts Row -->
+            <div class="charts-row">
+              <div class="chart-container">
+                <h3>Recipe Categories</h3>
+                <canvas id="category-chart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h3>Weekly Meal Plan</h3>
+                <canvas id="meal-plan-chart"></canvas>
+              </div>
+            </div>
+            <!-- Health Performance Section -->
+            <div class="health-performance">
+              <h2>7-Day Food Record & Health Performance</h2>
+              <div class="health-charts">
+                <div class="chart-container">
+                  <h3>Daily Calorie Intake</h3>
+                  <canvas id="weekly-calories-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                  <h3>Nutrient Breakdown</h3>
+                  <canvas id="nutrient-pie-chart"></canvas>
+                </div>
+              </div>
+              <div class="health-suggestions">
+                <h3>Suggestions</h3>
+                <p id="health-suggestions-text">Loading...</p>
+              </div>
+            </div>
+            <!-- Add Food Record Button -->
+            <div class="add-food-record" style="text-align:center; margin-top: 20px;">
+              <button id="add-food-btn" class="btn-primary">Add Food Record</button>
+            </div>
+            <!-- Featured Recipes -->
+            <div class="featured-recipes">
+              <h2><i class="fas fa-star"></i> Today's Specials</h2>
+              <div id="featured-recipes-grid" class="recipes-grid"></div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Recipes Section -->
+        <section id="recipes" class="tab-content">
+          <div class="section-header">
+            <h2>Recipe Explorer</h2>
+            <div class="recipe-filters">
+              <select id="category-filter">
+                <option value="">All Categories</option>
+              </select>
+              <select id="area-filter">
+                <option value="">All Cuisines</option>
+              </select>
+            </div>
+          </div>
+          <div id="recipes-container" class="recipes-grid"></div>
+        </section>
+        
+        <!-- Nutrition Analyzer Section -->
+        <section id="nutrition" class="tab-content">
+          <div class="nutrition-container">
+            <div class="nutrition-search">
+              <h2>Nutrition Analyzer</h2>
+              <div class="search-box">
+                <input type="text" id="nutrition-query" placeholder="Enter food item" />
+                <button id="analyze-btn">Analyze</button>
+              </div>
+            </div>
+            <div id="nutrition-results" class="hidden">
+              <div class="nutrition-facts">
+                <h3>Nutrition Facts</h3>
+                <canvas id="nutrition-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <!-- Recipe Modal (optional for detailed recipe view) -->
+      <div id="recipe-modal" class="modal hidden">
+        <div class="modal-content">
+          <span class="close-modal">&times;</span>
+          <div id="modal-content"></div>
+        </div>
+      </div>
+      
+      <!-- Food Record Modal -->
+      <div id="food-modal" class="modal hidden">
+        <div class="modal-content">
+          <span class="close-food-modal close-modal">&times;</span>
+          <form id="food-form">
+            <h2>Add Food Record</h2>
+            <label for="food-date">Date:</label>
+            <input type="date" id="food-date" name="food-date" required />
+            <label for="food-name">Food Name:</label>
+            <input type="text" id="food-name" name="food-name" placeholder="e.g., Salad" required />
+            <label for="food-calories">Calories:</label>
+            <input type="number" id="food-calories" name="food-calories" placeholder="e.g., 500" required />
+            <label for="food-proteins">Proteins (g):</label>
+            <input type="number" id="food-proteins" name="food-proteins" required />
+            <label for="food-carbs">Carbs (g):</label>
+            <input type="number" id="food-carbs" name="food-carbs" required />
+            <label for="food-fats">Fats (g):</label>
+            <input type="number" id="food-fats" name="food-fats" required />
+            <button type="submit" class="btn-primary">Add Record</button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Toast Notification -->
+      <div id="toast" class="toast hidden"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="js/app.js"></script -->
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  // --- Initialize Theme from Local Storage ---
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+  }
+
+  // --- Restore Last Active Tab ---
+  const lastTab = localStorage.getItem("activeTab") || "dashboard";
+  activateTab(lastTab);
+
+  // --- Tab Switching Logic ---
+  document.querySelectorAll(".nav-item").forEach((navItem) => {
+    navItem.addEventListener("click", () => {
+      const tabId = navItem.getAttribute("data-tab");
+      activateTab(tabId);
+      localStorage.setItem("activeTab", tabId);
+    });
+  });
+
+  function activateTab(tabId) {
+    document.querySelectorAll(".nav-item").forEach((item) => {
+      item.classList.toggle("active", item.getAttribute("data-tab") === tabId);
+    });
+    document.querySelectorAll(".tab-content").forEach((section) => {
+      section.classList.toggle("active", section.id === tabId);
+    });
+  }
+
+  // --- Global Search Handling (Dummy Implementation) ---
+  document.getElementById("search-btn").addEventListener("click", () => {
+    const query = document.getElementById("global-search").value.trim();
+    if (query) {
+      console.log("Searching for recipes:", query);
+      // Implement search filtering logic here...
+    }
+  });
+
+  // --- Toggle Theme ---
+  document.querySelector(".btn-theme").addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    const newTheme = document.body.classList.contains("dark-mode") ? "dark" : "light";
+    localStorage.setItem("theme", newTheme);
+  });
+
+  // --- Modal Handling for Recipe Modal (optional) ---
+  const recipeModal = document.getElementById("recipe-modal");
+  const recipeModalContent = document.getElementById("modal-content");
+  document.querySelector(".close-modal").addEventListener("click", closeRecipeModal);
+  recipeModal.addEventListener("click", (e) => {
+    if (e.target === recipeModal) closeRecipeModal();
+  });
+  function openRecipeModal(contentHTML) {
+    recipeModalContent.innerHTML = contentHTML;
+    recipeModal.classList.remove("hidden");
+  }
+  function closeRecipeModal() {
+    recipeModalContent.innerHTML = "";
+    recipeModal.classList.add("hidden");
+  }
+
+  // --- Food Modal Handling ---
+  const foodModal = document.getElementById("food-modal");
+  const foodForm = document.getElementById("food-form");
+  const addFoodBtn = document.getElementById("add-food-btn");
+  const closeFoodModalBtn = foodModal.querySelector(".close-food-modal");
+
+  // Pre-fill date with today's date for food record
+  function setDefaultFoodDate() {
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("food-date").value = today;
+  }
+  
+  function openFoodModal() {
+    setDefaultFoodDate();
+    foodModal.classList.remove("hidden");
+  }
+
+  function closeFoodModal() {
+    foodModal.classList.add("hidden");
+    foodForm.reset();
+  }
+
+  addFoodBtn.addEventListener("click", openFoodModal);
+  closeFoodModalBtn.addEventListener("click", closeFoodModal);
+  foodModal.addEventListener("click", (e) => {
+    if (e.target === foodModal) closeFoodModal();
+  });
+
+  // --- Process Food Form Submission ---
+  foodForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    // Retrieve form values
+    const date = document.getElementById("food-date").value;
+    const name = document.getElementById("food-name").value.trim();
+    const calories = parseInt(document.getElementById("food-calories").value);
+    const proteins = parseInt(document.getElementById("food-proteins").value);
+    const carbs = parseInt(document.getElementById("food-carbs").value);
+    const fats = parseInt(document.getElementById("food-fats").value);
+
+    if (!date || !name || isNaN(calories) || isNaN(proteins) || isNaN(carbs) || isNaN(fats)) {
+      alert("Please fill in all fields correctly.");
+      return;
+    }
+
+    // Load existing food records from localStorage
+    let foodRecords = localStorage.getItem("foodRecords");
+    foodRecords = foodRecords ? JSON.parse(foodRecords) : [];
+    
+    // Add new food record
+    foodRecords.push({ date, name, calories, proteins, carbs, fats });
+    // Sort records by date (ascending)
+    foodRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+    localStorage.setItem("foodRecords", JSON.stringify(foodRecords));
+
+    closeFoodModal();
+    updateHealthPerformance();
+    showToast("Food record added successfully.");
+  });
+
+  // --- Toast Notification Function ---
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.classList.remove("hidden");
+    setTimeout(() => {
+      toast.classList.add("hidden");
+    }, 3000);
+  }
+
+  // --- Dashboard Data Loading (example using localStorage) ---
+  function loadDashboardData() {
+    document.getElementById("total-recipes").innerText =
+      localStorage.getItem("totalRecipes") || 25;
+    document.getElementById("avg-calories").innerText =
+      (localStorage.getItem("avgCalories") || 350) + " kcal";
+    document.getElementById("avg-time").innerText =
+      (localStorage.getItem("avgTime") || 30) + " mins";
+  }
+  loadDashboardData();
+
+  // --- Chart.js Initializations for Existing Charts ---
+  function initCharts() {
+    // Recipe Categories Chart (Pie Chart)
+    const ctxCategory = document.getElementById("category-chart").getContext("2d");
+    new Chart(ctxCategory, {
+      type: "pie",
+      data: {
+        labels: ["Breakfast", "Lunch", "Dinner", "Snacks"],
+        datasets: [
+          {
+            data: [10, 7, 5, 3],
+            backgroundColor: ["#FFA07A", "#20B2AA", "#87CEFA", "#FFB6C1"]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: "bottom" } }
+      }
+    });
+
+    // Weekly Meal Plan Chart (Bar Chart)
+    const ctxMealPlan = document.getElementById("meal-plan-chart").getContext("2d");
+    new Chart(ctxMealPlan, {
+      type: "bar",
+      data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [
+          {
+            label: "Meals",
+            data: [3, 4, 3, 5, 4, 3, 4],
+            backgroundColor: "#6A5ACD"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+  initCharts();
+
+  // --- Health Performance Functions ---
+  function loadFoodRecords() {
+    let storedRecords = localStorage.getItem("foodRecords");
+    if (!storedRecords) {
+      const records = [];
+      // Generate dummy data for past 7 days if no records exist
+      for (let i = 6; i >= 0; i--) {
+        let recordDate = new Date();
+        recordDate.setDate(recordDate.getDate() - i);
+        let formattedDate = recordDate.toISOString().split("T")[0];
+        let calories = Math.floor(Math.random() * (2500 - 1800 + 1)) + 1800;
+        let proteins = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+        let carbs = Math.floor(Math.random() * (350 - 200 + 1)) + 200;
+        let fats = Math.floor(Math.random() * (100 - 40 + 1)) + 40;
+        records.push({ date: formattedDate, name: "Dummy Food", calories, proteins, carbs, fats });
+      }
+      localStorage.setItem("foodRecords", JSON.stringify(records));
+      return records;
+    } else {
+      return JSON.parse(storedRecords);
+    }
+  }
+
+  function updateHealthPerformance() {
+    const records = loadFoodRecords();
+    let totalCalories = 0,
+      totalProteins = 0,
+      totalCarbs = 0,
+      totalFats = 0;
+    const labels = [];
+    let dailyCalories = [];
+    records.forEach((record) => {
+      totalCalories += record.calories;
+      totalProteins += record.proteins;
+      totalCarbs += record.carbs;
+      totalFats += record.fats;
+      labels.push(record.date);
+      dailyCalories.push(record.calories);
+    });
+    const avgCalories = Math.round(totalCalories / records.length);
+    
+    // Health suggestion based on avgCalories
+    let suggestionText = "";
+    let suggestionColor = "";
+    if (avgCalories <= 2100) {
+      suggestionText = "Excellent food habits! Keep it up.";
+      suggestionColor = "green";
+    } else if (avgCalories <= 2500) {
+      suggestionText = "Your intake is moderate. Consider a balanced diet.";
+      suggestionColor = "orange";
+    } else {
+      suggestionText = "High calorie intake detected. Consider adjusting your meals.";
+      suggestionColor = "red";
+    }
+    const suggestionElem = document.getElementById("health-suggestions-text");
+    suggestionElem.innerText = suggestionText;
+    suggestionElem.style.color = suggestionColor;
+
+    // Update Daily Calorie Intake Bar Chart
+    const ctxWeekly = document.getElementById("weekly-calories-chart").getContext("2d");
+    if (window.weeklyCaloriesChart) {
+      window.weeklyCaloriesChart.data.labels = labels;
+      window.weeklyCaloriesChart.data.datasets[0].data = dailyCalories;
+      window.weeklyCaloriesChart.data.datasets[0].backgroundColor =
+        dailyCalories.map((cal) =>
+          cal <= 2100 ? "green" : cal <= 2500 ? "orange" : "red"
+        );
+      window.weeklyCaloriesChart.update();
+    } else {
+      window.weeklyCaloriesChart = new Chart(ctxWeekly, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Calorie Intake",
+              data: dailyCalories,
+              backgroundColor: dailyCalories.map((cal) =>
+                cal <= 2100 ? "green" : cal <= 2500 ? "orange" : "red"
+              )
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Calories" }
+            }
+          }
+        }
+      });
+    }
+
+    // Update Nutrient Breakdown Pie Chart
+    const ctxNutrient = document.getElementById("nutrient-pie-chart").getContext("2d");
+    if (window.nutrientPieChart) {
+      window.nutrientPieChart.data.datasets[0].data = [totalProteins, totalCarbs, totalFats];
+      window.nutrientPieChart.update();
+    } else {
+      window.nutrientPieChart = new Chart(ctxNutrient, {
+        type: "pie",
+        data: {
+          labels: ["Proteins", "Carbs", "Fats"],
+          datasets: [
+            {
+              data: [totalProteins, totalCarbs, totalFats],
+              backgroundColor: ["#FF6347", "#FFD700", "#8FBC8F"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "bottom" }
+          },
+        },
+      });
+    }
+  }
+  updateHealthPerformance();
+
+  // --- Nutrition Analyzer Example ---
+  document.getElementById("analyze-btn").addEventListener("click", () => {
+    const query = document.getElementById("nutrition-query").value.trim();
+    if (query) {
+      setTimeout(() => {
+        document.getElementById("nutrition-results").classList.remove("hidden");
+        const ctxNutrition = document.getElementById("nutrition-chart").getContext("2d");
+        new Chart(ctxNutrition, {
+          type: "doughnut",
+          data: {
+            labels: ["Proteins", "Carbs", "Fats"],
+            datasets: [
+              {
+                data: [30, 50, 20],
+                backgroundColor: ["#FF6347", "#FFD700", "#8FBC8F"],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { position: "bottom" } },
+          },
+        });
+      }, 1000);
+    }
+  });
+
+  // Future: Replace localStorage functions with backend API calls as needed.
+});
+
+
+
+function loadRecipes() {
+  // Retrieve recipes data from localStorage,
+  // or use an API call: fetch('/api/recipes') 
+  // For now, let's use dummy data:
+  const dummyRecipes = [
+    { id: 1, title: "Chicken Salad", category: "Lunch", area: "American" },
+    { id: 2, title: "Pasta Carbonara", category: "Dinner", area: "Italian" },
+    { id: 3, title: "Avocado Toast", category: "Breakfast", area: "American" },
+  ];
+  
+  // Grab the recipes container
+  const recipesContainer = document.getElementById("recipes-container");
+  recipesContainer.innerHTML = ""; // Clear any previous content
+
+  dummyRecipes.forEach(recipe => {
+    const recipeCard = document.createElement("div");
+    recipeCard.classList.add("recipe-card");
+    recipeCard.innerHTML = `
+      <h3>${recipe.title}</h3>
+      <p>Category: ${recipe.category}</p>
+      <p>Cuisine: ${recipe.area}</p>
+    `;
+    recipesContainer.appendChild(recipeCard);
+  });
+}
+
+// Call the function to load recipes
+loadRecipes();
+
+
+</script>
+  </body>
+</html>
